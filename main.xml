@@ -4,7 +4,7 @@
 	<form id="collectDigits">
 		<field name="phoneNumber" type="digits?minlength=7;maxlength=10" bargein="false">
 			<prompt bargein="false">
-				<audio src="whenUCall_Response.wav" fetchhint="prefetch">
+				<audio src="audio/whenUCall_Response.wav" fetchhint="prefetch">
 					<!-- BACK UP TTS HERE -->
 				</audio>
 			</prompt>
@@ -24,13 +24,13 @@
 				</rule>
 			</grammar>
 			<prompt bargein="false">
-				<audio src="WhenUCall_yournumberis.wav" fetchhint="prefetch">
+				<audio src="audio/WhenUCall_yournumberis.wav" fetchhint="prefetch">
 					<!-- BACK UP TTS HERE -->
 				</audio>
 				<say-as interpret-as="telephone">
 					<value expr="phoneNumber"/>
 				</say-as>
-				<audio src="WhenUCall_press1press2.wav" fetchhint="prefetch">
+				<audio src="audio/WhenUCall_press1press2.wav" fetchhint="prefetch">
 					<!-- BACK UP TTS HERE -->
 				</audio>
 			</prompt>
@@ -43,12 +43,12 @@
 				<log expr="'@@@@@@@@ END APPLICATION VARS @@@@@@@'"/>
 				<if cond="confirm==1">
 					<log expr="'@@@@[ confirmed ]'"/>  
-					<audio src="WhenUCall_Confirmation.wav" fetchhint="prefetch">
+					<audio src="audio/WhenUCall_Confirmation.wav" fetchhint="prefetch">
 						<!-- BACK UP TTS HERE -->
 					</audio>
 					<exit namelist="phoneNumber"/>
 					<else/>
-					<audio src="WhenUCall_facebookphone.wav" fetchhint="prefetch">
+					<audio src="audio/WhenUCall_facebookphone.wav" fetchhint="prefetch">
 						<!-- BACK UP TTS HERE -->
 					</audio>
 					<log expr="'@@@@[ wrong number ]'"/>
