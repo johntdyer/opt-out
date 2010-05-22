@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1">
+	<var name="phoneNumber"/>
+	<form id="collectDigits">
+		<field name="phoneNumber" type="digits?minlength=7;maxlength=10" bargein="false">
+			<prompt bargein="false">
+				<audio src="whenUCall_Response.wav" fetchhint="prefetch">
+					<!-- BACK UP TTS HERE -->
+				</audio>
+			</prompt>
+			<filled>
+				<log expr="'@@@@[phoneNumber] ' + phoneNumber"/>
+				<assign name="phoneNumber" expr="phoneNumber"/>
+				<log expr="'@@@@[phoneNumber] ' + phoneNumber"/>
+			</filled>
+		</field>
+		<field name="confirm">
+			<grammar xml:lang="en-US" root="TOPLEVEL" mode="dtmf">
+				<rule id="TOPLEVEL" scope="public">
+					<one-of>
+						<item> 1 </item>
+						<item> 2 </item>
+					</one-of>
+				</rule>
+			</grammar>
+			<prompt bargein="false">
+				<audio src="WhenUCall_yournumberis.wav" fetchhint="prefetch">
+					<!-- BACK UP TTS HERE -->
+				</audio>
+				<say-as interpret-as="telephone">
+					<value expr="phoneNumber"/>
+				</say-as>
+				<audio src="WhenUCall_press1press2.wav" fetchhint="prefetch">
+					<!-- BACK UP TTS HERE -->
+				</audio>
+			</prompt>
+			<filled>
+				<log expr="'@@@@@@@@ APPLICATION VARS @@@@@@@'"/>
+				<log expr="'CONFIDENCE =' + confirm$.confidence"/>
+				<log expr="'INPUTMODE =' + confirm$.inputmode"/>
+				<log expr="'@@@@INTERPRETATION = ' + confirm$.value"/>
+				<log expr="'UTTERANCE =' +  confirm$.utterance"/>
+				<log expr="'@@@@@@@@ END APPLICATION VARS @@@@@@@'"/>
+				<if cond="confirm==1">
+					<log expr="'@@@@[ confirmed ]'"/>  
+					<audio src="WhenUCall_Confirmation.wav" fetchhint="prefetch">
+						<!-- BACK UP TTS HERE -->
+					</audio>
+					<exit namelist="phoneNumber"/>
+					<else/>
+					<audio src="WhenUCall_facebookphone.wav" fetchhint="prefetch">
+						<!-- BACK UP TTS HERE -->
+					</audio>
+					<log expr="'@@@@[ wrong number ]'"/>
+					<clear namelist="phoneNumber confirm"/>
+					<goto nextitem="phoneNumber"/>
+				</if>
+			</filled>
+		</field>
+	</form>
+</vxml>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- NOTE THAT WE *MUST* DECLARE THE xmlns ATTRIBUTE -->
+<ccxml xmlns:voxeo="http://community.voxeo.com/xmlns/ccxml" version="1.0">
+	<var name="callID"/>
+	<eventprocessor>
+		<transition event="connection.alerting">
+			<assign name="callID" expr="event$.connectionid"/>
+			<log expr="'@@@@ The calledID is ' + event$.connection.local"/>
+			<log expr="'@@@@ The caller ID is ' + event$.connection.remote"/>
+			<accept connectionid="callID"/>
+		</transition>
+		<transition event="connection.connected">
+			<log expr="'@@@@ Call was accepted ***'"/>
+			<dialogstart src="'main.xml'" type="'application/voicexml+xml'"/>
+		</transition>
+		<transition event="connection.disconnected">
+			<log expr="'@@@@ Call was disconnected ***'"/>
+			<exit/>
+		</transition>
+		<transition event="connection.failed">
+			<voxeo:sendemail to="'exceptions@rishistar.com'" from="'rishi@sixteen30.com'" type="'debug'" body="'Error in callout app \n '"/>
+			<exit/>
+		</transition>
+		<transition event="dialog.exit">
+			<log expr="'@@@@@@@@ PHONE NUMBER ' + event$.values.phoneNumber"/>
+			<log expr="'@@@@@ TRYING TO SEND TO http://sixteen30.net/MessageDeliverySystem/OptOut?project=ODWB&amp;number_full=' + event$.values.phoneNumber"/>
+			<send name="'http.get'" target="'http://sixteen30.net/MessageDeliverySystem/OptOut?project=ODWB&amp;number_full=' + event$.values.digits" targettype="'basichttp'"/>
+				<dialogstart src="'null://?text=Your number has now been opted out from our system. Goodbye.'" type="'audio/wav'"/>
+				<log expr="'**** OPTOUT SENT"/>
+			
+		</transition>
+		<transition event="send.successfull">
+			<log expr="'@@@@[SEND.SUCCESSFULL]'"/>
+			<send name="'user.CLEAN_UP'" target="session.id" delay="'500ms'"/>
+			<log expr="'@@@@[sending user.CLEAN_UP] ' "/>
+			<disconnect connectionid="callID"/>
+		</transition>
+		<transition event="user.CLEAN_UP">
+			<log expr="'@@@@[user.CLEAN_UP ]'"/>
+			<exit/>
+		</transition>
+	</eventprocessor>
+</ccxml>
