@@ -1,1 +1,4 @@
 This is an optOut VoiceXML application for a developer
+
+Wrapper.xml => CCXML Wrapper (start here)
+main.xml => VoiceXML Application (Wrapper starts this)
