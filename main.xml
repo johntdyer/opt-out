@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<vxml version="2.1">
+<vxml version="2.1">    
+	<var name="playInitialPrompt" expr="true"/>
 	<var name="phoneNumber"/>
 	<form id="collectDigits">
 		<field name="phoneNumber" type="digits?minlength=7;maxlength=10" bargein="false">
 			<prompt bargein="false">
-				<audio src="audio/whenUCall_Response.wav" fetchhint="prefetch">
+				<audio src="audio/whenUCall_Response.wav" cond="playInitialPrompt" fetchhint="prefetch">
 					<!-- BACK UP TTS HERE -->
 				</audio>
 			</prompt>
@@ -50,7 +51,8 @@
 					<else/>
 					<audio src="audio/WhenUCall_facebookphone.wav" fetchhint="prefetch">
 						<!-- BACK UP TTS HERE -->
-					</audio>
+					</audio>                
+					<assign name="playInitialPrompt" expr="false"/>
 					<log expr="'@@@@[ wrong number ]'"/>
 					<clear namelist="phoneNumber confirm"/>
 					<goto nextitem="phoneNumber"/>
